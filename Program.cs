@@ -51,7 +51,7 @@ namespace Rhythym
       while (isRunning == true)
       {
         var db = new DatabaseContext();
-        Console.WriteLine("Would you like to (SIGN), (PRODUCE), (REMOVE), (RESIGN), (VIEW) a band or (QUIT)?");
+        Console.WriteLine("Would you like to (SIGN), (PRODUCE), (UNSIGN), (RESIGN), (VIEW) a band or (QUIT)?");
         var input = Console.ReadLine().ToLower();
 
         var newBand = new Band();
@@ -87,9 +87,18 @@ namespace Rhythym
           db.SaveChanges();
 
         }
-        else if (input == "remove")
+        else if (input == "unsign")
         {
-          // update issigning to false
+          Console.WriteLine("Which band do you want to unsign?");
+          var band = Console.ReadLine().ToLower();
+
+          var bandToUnsign = db.Bands.FirstOrDefault(b => b.Name == band);
+          bandToUnsign.IsSigned = false;
+
+          Console.WriteLine($"You have unsigned {band}.");
+          db.SaveChanges();
+
+
         }
         else if (input == "produce")
         {
