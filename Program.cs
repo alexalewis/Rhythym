@@ -18,7 +18,7 @@ namespace Rhythym
         {
           db.Bands.Add(new Band
           {
-            Name = "Khruangbin",
+            Name = "khruangbin",
             CountryOfOrigin = "USA",
             NumberOfMembers = "3",
             Website = "www.khruangbin.com",
@@ -30,7 +30,7 @@ namespace Rhythym
           });
           db.Bands.Add(new Band
           {
-            Name = "Glass Animals",
+            Name = "glass animals",
             CountryOfOrigin = "UK",
             NumberOfMembers = "4",
             Website = "www.glassanimals.com",
@@ -51,7 +51,7 @@ namespace Rhythym
       while (isRunning == true)
       {
         var db = new DatabaseContext();
-        Console.WriteLine("Would you like to (SIGN), (PRODUCE), (UNSIGN), (RESIGN), (VIEW) a band or (QUIT)?");
+        Console.WriteLine("Would you like to (SIGN), (PRODUCE), (UNSIGN), (RESIGN), (VIEW) or (QUIT)?");
         var input = Console.ReadLine().ToLower();
 
         var newBand = new Band();
@@ -89,6 +89,11 @@ namespace Rhythym
         }
         else if (input == "unsign")
         {
+          var viewBands = db.Bands.OrderBy(b => b.IsSigned == true);
+          foreach (var seeBand in viewBands)
+          {
+            Console.WriteLine($"{seeBand.Name}");
+          }
           Console.WriteLine("Which band do you want to unsign?");
           var band = Console.ReadLine().ToLower();
 
@@ -106,6 +111,12 @@ namespace Rhythym
           if (produceInput == "create")
           {
             var newAlbum = new Album();
+
+            var viewBands = db.Bands.OrderBy(b => b.Id);
+            foreach (var seeBand in viewBands)
+            {
+              Console.WriteLine($" {seeBand.Id} : {seeBand.Name}");
+            }
 
             Console.WriteLine("Which band are you producing an album for? Choose by Id");
             newAlbum.BandId = int.Parse(Console.ReadLine());
@@ -126,6 +137,12 @@ namespace Rhythym
           if (produceInput == "add")
           {
             var newSong = new Song();
+
+            var viewAlbums = db.Albums.OrderBy(a => a.Id);
+            foreach (var seeAlbum in viewAlbums)
+            {
+              Console.WriteLine($" {seeAlbum.Id} : {seeAlbum.Title}");
+            }
 
             Console.WriteLine("Which album are you adding a song to? Choose by Id");
             newSong.AlbumId = int.Parse(Console.ReadLine());
@@ -149,6 +166,11 @@ namespace Rhythym
         }
         else if (input == "resign")
         {
+          var viewBands = db.Bands.OrderBy(b => b.IsSigned == false);
+          foreach (var seeBand in viewBands)
+          {
+            Console.WriteLine($"{seeBand.Name}");
+          }
           Console.WriteLine("Which band do you want to resign?");
           var band = Console.ReadLine().ToLower();
 
@@ -160,7 +182,52 @@ namespace Rhythym
         }
         else if (input == "view")
         {
-          // view options 
+          Console.WriteLine("Do you want to view all (ALBUMS)for a band, (ORDER) by release date, (SIGNED) bands, (NOT) signed bands, or (SONGS) from an album?");
+          var viewInput = Console.ReadLine().ToLower();
+
+          if (viewInput == "albums")
+          {
+
+            Console.WriteLine("Which band do you want to see albums for?");
+            var bandInput = Console.ReadLine().ToLower();
+
+            var viewBand = db.Bands.FirstOrDefault(b => b.Name == bandInput);
+            var viewAlbums = db.Albums.Where(a => a.BandId == viewBand.Id);
+
+            foreach (var album in viewAlbums)
+            {
+              Console.WriteLine($"{album.Title} are the albums for {viewBand.Name}.");
+            }
+          }
+          else if (viewInput == "order")
+          {
+            var orderedAlbums = db.Albums.OrderBy(a => a.ReleaseDate);
+            foreach (var order in orderedAlbums)
+            {
+              Console.WriteLine($"{order.Title} was released {order.ReleaseDate}");
+            }
+          }
+          else if (viewInput == "signed")
+          {
+            var signedBands = db.Bands.Where(b => b.IsSigned == true);
+            foreach (var signed in signedBands)
+            {
+              Console.WriteLine($"{signed.Name} is signed");
+            }
+          }
+          else if (viewInput == "not")
+          {
+            var notSignedBands = db.Bands.Where(b => b.IsSigned == false);
+            foreach (var notSigned in notSignedBands)
+            {
+              Console.WriteLine($"{notSigned.Name} is not signed");
+            }
+          }
+          else if (viewInput == "songs")
+          {
+            // songs
+          }
+
         }
         else if (input == "quit")
         {
