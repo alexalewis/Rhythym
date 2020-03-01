@@ -237,9 +237,11 @@ namespace Rhythym
             var viewAlbums = db.Albums.FirstOrDefault(a => a.Title == songs);
             var viewSongs = db.Songs.Where(s => s.AlbumId == viewAlbums.Id);
 
+            Console.WriteLine($"The songs in {viewAlbums.Title} : ");
+
             foreach (var song in viewSongs)
             {
-              Console.WriteLine($"{song.Title} are the songs for {viewAlbums.Title}.");
+              Console.WriteLine($"{song.Title}");
             }
 
           }
