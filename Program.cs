@@ -225,7 +225,23 @@ namespace Rhythym
           }
           else if (viewInput == "songs")
           {
-            // songs
+
+            var albums = db.Albums.OrderBy(a => a.Id);
+            foreach (var seeAlbums in albums)
+            {
+              Console.WriteLine($"{seeAlbums.Title}");
+            }
+            Console.WriteLine("Which album do you want to see songs for?");
+            var songs = Console.ReadLine().ToLower();
+
+            var viewAlbums = db.Albums.FirstOrDefault(a => a.Title == songs);
+            var viewSongs = db.Songs.Where(s => s.AlbumId == viewAlbums.Id);
+
+            foreach (var song in viewSongs)
+            {
+              Console.WriteLine($"{song.Title} are the songs for {viewAlbums.Title}.");
+            }
+
           }
 
         }
